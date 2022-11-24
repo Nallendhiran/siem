@@ -1,0 +1,74 @@
+wazuh-server install:
+1)install ova file to vmware or install all in linux.
+2)use the ip and open in browser
+3)configure filebeat.yml file to change the password config
+4)connect agent to it
+5)start the services:
+ systemctl daemon-reload
+systemctl enable wazuh-agent
+systemctl start wazuh-agent
+
+snort install:
+1)install in ubuntu 
+2)change the snort conf file in /etc/snort/snort.conf(home network)
+3)run sudo snort -T -i eth0 -c /etc/snort/snort.conf (to run test check)
+4)run sudo snort -i eth0 -c /etc/snort/snort.conf -q -l /var/log/snort
+-A console
+(view all the traffic easily)
+5)if you want install community rules and append to the snort log files
+6)configure the local rules file as you can.
+alert icmp any any -> $HOME_NET any (msg:"ping me";sid:#unique ; rev:1;)
+
+
+suricata install
+1)install suricata 
+2)configure the yaml file 
+3)change the ip ,rule-path,community-id,interface
+4)check test (suricata-update, list-sources, enable-resources) 
+5)run suricata -d
+6)run suricata -T -c /etc/suricata/* -v
+7)run systemctl start suricata.service
+8)if you want to write local rules(write and configure in yaml file)
+9)restart services
+10)check log files (for json type use "jq" format)
+
+
+splunk install:
+1)install splunk enterprise
+2)go to opt/splunk/bin/splunk enable boot-start
+3)systemctl start splunk (http://8000)
+and go to forwarding and receiving (configure port)
+4)download the snort addon and universal forwarder splunk(to forward logs)
+5)splunk start accept-license(on opt/splunkforwarder/bin/)
+
+snort->splunk
+1)after universal-forwarder
+2)./splunk add forward-server ip:port
+3)go to output.conf and check
+4)run ./splunk add monitor alert_file_name
+5)go to inputs.conf
+
+*[splunktcp://9997]
+*connection_host= server_ip
+*index=main 
+*sourcetype=snort_alert_full
+*source=snort
+
+6)after changing restart spulnk
+7)use splunk
+
+
+
+ossec
+
+1)install ossec-hids(install all dependencies from hackersploit part2)(
+
+sudo apt install -y php php-cli php-common libapache2-mod-php apache2-utils sendmail inotify-tools build-essential gcc wget tar libssl1.0-dev libz-dev libssl-dev libpcre2-dev libevent-dev libsystemd-dev)
+
+2)install 0ssec-wui for web intserface
+(a2enmod rewrite)
+
+3)alter the configuration for web interface
+4)download the agent for windows
+5)restart the ossec-control
+
